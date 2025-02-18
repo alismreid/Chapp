@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار العناصر الكيميائية</title>
+    <style>
+        /* نفس الأنماط السابقة بدون تعديل */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f8ff;
+        }
+
+        .page {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        nav {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        nav button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        nav button:hover {
+            background-color: #45a049;
+        }
+
+        #quizContainer {
+            text-align: center;
+        }
+
+        .question {
+            font-size: 24px;
+            margin: 20px 0;
+            color: #2c3e50;
+        }
+
+        input {
+            padding: 12px;
+            font-size: 18px;
+            width: 250px;
+            margin: 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        #feedback {
+            font-weight: bold;
+            margin: 15px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .correct { 
+            color: #27ae60;
+            background-color: #e8f6e9;
+        }
+
+        .incorrect { 
+            color: #c0392b;
+            background-color: #f9ebea;
+        }
+
+        #score {
+            font-size: 20px;
+            margin: 20px 0;
+            color: #2980b9;
+        }
+
+        #aboutPage ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #aboutPage li {
+            margin: 10px 0;
+            padding: 8px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- الصفحة الرئيسية -->
+    <div id="homePage" class="page">
+        <h1 style="color: #2c3e50;">اختبار العناصر الكيميائية</h1>
+        <p style="font-size: 18px; color: #7f8c8d;">اختبر معرفتك بأشهر 27 عنصر كيميائي</p>
+        <nav>
+            <button onclick="showPage('quizPage')">بدء الاختبار</button>
+            <button onclick="showPage('aboutPage')">عن المشروع</button>
+        </nav>
+    </div>
+
+    <!-- صفحة الاختبار -->
+    <div id="quizPage" class="page" style="display: none;">
+        <nav>
+            <button onclick="showPage('homePage')">العودة للرئيسية</button>
+        </nav>
+        <div id="quizContainer">
+            <div id="score">النقاط: 0</div>
+            <div id="question" class="question"></div>
+            <input type="text" id="answerInput" placeholder="أدخل الإجابة هنا...">
+            <button onclick="checkAnswer()" style="padding: 12px 25px;">تحقق من الإجابة</button>
+            <div id="feedback"></div>
+        </div>
+    </div>
+
+    <!-- صفحة عن المشروع -->
+    <div id="aboutPage" class="page" style="display: none;">
+        <nav>
+            <button onclick="showPage('homePage')">العودة للرئيسية</button>
+        </nav>
+        <h2 style="color: #16a085;">عن المشروع</h2>
+        <p>اختبار تفاعلي يشمل 27 عنصرًا كيميائيًا أساسيًا</p>
+        <ul>
+            <li>أسئلة متنوعة في الرموز والأسماء</li>
+            <li>25 سؤالًا عشوائيًا لكل محاولة</li>
+            <li>تصميم سهل الاستخدام</li>
+        </ul>
+        <h3 style="color: #27ae60;">البرنامج:</h3>
+        <ul>
+            <li>إعداد الطالب: ياسين علي سالم</li>
+            <li>المشرف: الأستاذ علي غالب</li>
+            <li>ثانوية المتفوقين الأولى - الناصرية</li>
+            <li>2025</li>
+        </ul>
+    </div>
+
+    <script>
+        // العناصر المعدلة (27 عنصرًا)
+        const elements = [
+            {name: "هيدروجين", symbol: "H", atomicNumber: 1, massNumber: 1},
+            {name: "هيليوم", symbol: "He", atomicNumber: 2, massNumber: 4},
+            {name: "ليثيوم", symbol: "Li", atomicNumber: 3, massNumber: 7},
+            {name: "بريليوم", symbol: "Be", atomicNumber: 4, massNumber: 9},
+            {name: "بورون", symbol: "B", atomicNumber: 5, massNumber: 11},
+            {name: "كربون", symbol: "C", atomicNumber: 6, massNumber: 12},
+            {name: "نيتروجين", symbol: "N", atomicNumber: 7, massNumber: 14},
+            {name: "أكسجين", symbol: "O", atomicNumber: 8, massNumber: 16},
+            {name: "فلور", symbol: "F", atomicNumber: 9, massNumber: 19},
+            {name: "نيون", symbol: "Ne", atomicNumber: 10, massNumber: 20},
+            {name: "صوديوم", symbol: "Na", atomicNumber: 11, massNumber: 23},
+            {name: "مغنسيوم", symbol: "Mg", atomicNumber: 12, massNumber: 24},
+            {name: "ألومنيوم", symbol: "Al", atomicNumber: 13, massNumber: 27},
+            {name: "سيليكون", symbol: "Si", atomicNumber: 14, massNumber: 28},
+            {name: "فسفور", symbol: "P", atomicNumber: 15, massNumber: 31},
+            {name: "كبريت", symbol: "S", atomicNumber: 16, massNumber: 32},
+            {name: "كلور", symbol: "Cl", atomicNumber: 17, massNumber: 35},
+            {name: "بوتاسيوم", symbol: "K", atomicNumber: 19, massNumber: 39},
+            {name: "كالسيوم", symbol: "Ca", atomicNumber: 20, massNumber: 40},
+            {name: "نحاس", symbol: "Cu", atomicNumber: 29, massNumber: 64},
+            {name: "فضة", symbol: "Ag", atomicNumber: 47, massNumber: 108},
+            {name: "ذهب", symbol: "Au", atomicNumber: 79, massNumber: 197},
+            {name: "رصاص", symbol: "Pb", atomicNumber: 82, massNumber: 207},
+            {name: "بروم", symbol: "Br", atomicNumber: 35, massNumber: 80},
+            {name: "يود", symbol: "I", atomicNumber: 53, massNumber: 127},
+            {name: "زئبق", symbol: "Hg", atomicNumber: 80, massNumber: 201},
+            {name: "حديد", symbol: "Fe", atomicNumber: 26, massNumber: 56}
+        ];
+
+        // بقية الكود بدون تغيير
+        let currentQuestion = null;
+        let score = 0;
+        let questions = [];
+        let currentQuestionIndex = 0;
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.style.display = 'none';
+            });
+            document.getElementById(pageId).style.display = 'block';
+            
+            if (pageId === 'quizPage') {
+                startQuiz();
+            }
+        }
+
+        function startQuiz() {
+            score = 0;
+            currentQuestionIndex = 0;
+            questions = generateQuestions(25);
+            updateScore();
+            showNextQuestion();
+        }
+
+        function generateQuestions(count) {
+            const questions = [];
+            for (let i = 0; i < count; i++) {
+                const element = elements[Math.floor(Math.random() * elements.length)];
+                const questionTypes = [
+                    {type: 'nameToSymbol', question: `ما رمز عنصر ${element.name}؟`, answer: element.symbol},
+                    {type: 'symbolToName', question: `ما اسم العنصر ذي الرمز ${element.symbol}؟`, answer: element.name},
+                    {type: 'atomicNumber', question: `ما العدد الذري لعنصر ${element.name}؟`, answer: element.atomicNumber.toString()},
+                    {type: 'massNumber', question: `ما العدد الكتلي لعنصر ${element.name}؟`, answer: element.massNumber.toString()},
+                ];
+                const question = questionTypes[Math.floor(Math.random() * questionTypes.length)];
+                questions.push(question);
+            }
+            return questions;
+        }
+
+        function showNextQuestion() {
+            if (currentQuestionIndex < questions.length) {
+                currentQuestion = questions[currentQuestionIndex];
+                document.getElementById('question').textContent = currentQuestion.question;
+                document.getElementById('answerInput').value = '';
+                document.getElementById('feedback').textContent = '';
+            } else {
+                endQuiz();
+            }
+        }
+
+        function checkAnswer() {
+            const userAnswer = document.getElementById('answerInput').value.trim();
+            let isCorrect = false;
+
+            const normalizeString = (str) => str.toLowerCase().replace(/\s/g, '');
+            
+            switch(currentQuestion.type) {
+                case 'nameToSymbol':
+                case 'symbolToName':
+                    isCorrect = normalizeString(userAnswer) === normalizeString(currentQuestion.answer);
+                    break;
+                default:
+                    isCorrect = userAnswer === currentQuestion.answer;
+            }
+
+            if (isCorrect) {
+                score += 4;
+                updateScore();
+                showFeedback('✔️ إجابة صحيحة!', 'correct');
+            } else {
+                showFeedback(`❌ إجابة خاطئة! الإجابة الصحيحة: ${currentQuestion.answer}`, 'incorrect');
+            }
+
+            currentQuestionIndex++;
+            setTimeout(showNextQuestion, 1500);
+        }
+
+        function updateScore() {
+            document.getElementById('score').textContent = `النقاط: ${score}`;
+        }
+
+        function showFeedback(message, className) {
+            const feedback = document.getElementById('feedback');
+            feedback.innerHTML = message;
+            feedback.className = className;
+        }
+
+        function endQuiz() {
+            alert(`انتهى الاختبار!\nالنتيجة النهائية: ${score}/100`);
+            showPage('homePage');
+        }
+    </script>
+</body>
+</html>
